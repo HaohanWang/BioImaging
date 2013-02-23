@@ -1,6 +1,5 @@
 package persistence;
 
-
-public class TutorialDao{
+public class TutorialDao {
 
 }
