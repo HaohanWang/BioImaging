@@ -1,6 +1,6 @@
 package objectModel;
 
-public class BaseEntity implements indentifiable{
+public class BaseEntity implements Indentifiable{
 
     long id = 0;
 
