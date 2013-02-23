@@ -1,6 +1,6 @@
 package objectModel;
 
-public class report {
+public class Report {
     private Tutorial tutorial = null;
     private User learner = null;
     private String Algorithm = null, filename = null;

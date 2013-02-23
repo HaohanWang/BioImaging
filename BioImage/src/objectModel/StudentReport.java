@@ -1,6 +1,6 @@
 package objectModel;
 
-public class studentReport extends report {
+public class StudentReport extends Report {
   
     private int timeused = 0;
 

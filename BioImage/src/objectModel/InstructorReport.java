@@ -3,7 +3,7 @@ package objectModel;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class instructorReport extends report {
+public class InstructorReport extends Report {
     private int stuCount = 0;
     private Date time = null;
    
