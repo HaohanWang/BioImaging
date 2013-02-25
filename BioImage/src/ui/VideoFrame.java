@@ -7,8 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import javax.media.*;
-
 import javax.swing.*;
 
 public class VideoFrame extends JFrame implements ActionListener {
@@ -20,7 +18,6 @@ public class VideoFrame extends JFrame implements ActionListener {
     private FlowLayout buttonLayout;
     private JFileChooser fileChooser;
     private File videoFile;
-    private Player player;
 
     public VideoFrame() {
 	initComponents();
@@ -76,25 +73,7 @@ public class VideoFrame extends JFrame implements ActionListener {
 		    JOptionPane.showMessageDialog(this, "You chose this file: "
 			    + fileChooser.getSelectedFile().getAbsolutePath());
 		}
-		try {
-		    player = Manager.createRealizedPlayer(videoFile.toURI()
-			    .toURL());
-		    Component c = player.getVisualComponent();
-		    videoPanel.add(c);
-		    player.start();
-		} catch (NoPlayerException e1) {
-		    // TODO Auto-generated catch block
-		    e1.printStackTrace();
-		} catch (CannotRealizeException e1) {
-		    // TODO Auto-generated catch block
-		    e1.printStackTrace();
-		} catch (MalformedURLException e1) {
-		    // TODO Auto-generated catch block
-		    e1.printStackTrace();
-		} catch (IOException e1) {
-		    // TODO Auto-generated catch block
-		    e1.printStackTrace();
-		}
+
 	    } else
 		System.out.println("Cancelled");
 
