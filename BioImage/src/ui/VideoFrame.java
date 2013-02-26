@@ -77,7 +77,7 @@ public class VideoFrame extends JFrame implements ActionListener {
 			    + fileChooser.getSelectedFile().getAbsolutePath());
 		}
 		try {
-		    player = Manager.createRealizedPlayer(videoFile.toURI()
+		      player = Manager.createRealizedPlayer(videoFile.toURI()
 			    .toURL());
 		    Component c = player.getVisualComponent();
 		    videoPanel.add(c);
