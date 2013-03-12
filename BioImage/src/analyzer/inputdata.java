@@ -1,5 +1,20 @@
 package analyzer;
 
-public class inputdata {
+public class inputdata 
+{
+  
+  
+
+
+  
+ 
+  
+
+
+
+  
+  
+  
+  
 
 }
