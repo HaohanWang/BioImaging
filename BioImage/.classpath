@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="/home/kane/workspace/BioImaging/BioImage/jmf.jar"/>
 	<classpathentry kind="lib" path="/home/kane/workspace/BioImaging/BioImage/mediaplayer.jar"/>
 	<classpathentry kind="lib" path="/home/kane/workspace/BioImaging/BioImage/multiplayer.jar"/>
+	<classpathentry kind="lib" path="/Users/xiaobohu/Downloads/libsvm.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
