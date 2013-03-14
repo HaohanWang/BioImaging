@@ -18,8 +18,6 @@ public class Report {
         this.learner = learner;
     }
 
-
-
     public User getLearner() {
       
         return learner;
@@ -45,4 +43,6 @@ public class Report {
        this.filename = filename;
     }  
   
+    
+    
 }

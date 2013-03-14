@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="/home/kane/workspace/BioImaging/BioImage/jmf.jar"/>
 	<classpathentry kind="lib" path="/home/kane/workspace/BioImaging/BioImage/mediaplayer.jar"/>
 	<classpathentry kind="lib" path="/home/kane/workspace/BioImaging/BioImage/multiplayer.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jre7/lib/poi-3.9-20121203.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
