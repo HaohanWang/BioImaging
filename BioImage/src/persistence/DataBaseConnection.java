@@ -1,36 +1,74 @@
 package persistence;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.sql.*;
 
 public class DataBaseConnection {
   private static DataBaseConnection instance;
-  // temporarily use
-  BufferedWriter out = null;
-  private DataBaseConnection(){
-    //temporarily, only use a file to store.
-    try {
-      this.out =  new BufferedWriter(new FileWriter("pesdoDataBase.txt"));
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      System.out.println("FailtoCreateDataBase");
-      e.printStackTrace();
-    }
+
+  private final String user = "root";
+
+  private final String passwd = "111111";
+
+  private final String strDBname = "mydb";
+
+  private Statement stmt = null;
+
+  private ResultSet rs = null;
+
+  private Connection conn = null;
+
+  // String sql;
+
+  // String strurl;
+
+  private DataBaseConnection() {
+    boolean suc = connect();
   }
-  public static DataBaseConnection getInstance(){
-    if (instance==null){
-      instance=new DataBaseConnection();
+
+  public static DataBaseConnection getInstance() {
+    if (instance == null) {
+      instance = new DataBaseConnection();
     }
     return instance;
   }
-//  public ResultSet query (String q){
-//    
-//  }
-//  public boolean update(String q){
-//    
-//  }
-//  public boolean connect(){
-//    
-//  }
+
+  public ResultSet query(String q) {
+    try {
+      stmt = conn.createStatement();
+      rs = stmt.executeQuery(q);
+    } catch (SQLException e) {
+      e.printStackTrace();
+      System.out.println("query:" + e.getMessage());
+    }
+    return rs;
+  }
+
+  @SuppressWarnings("finally")
+  public boolean update(String q) {
+    try {
+      stmt = conn.createStatement();
+      stmt.executeUpdate(q);
+    } catch (SQLException e) {
+      e.printStackTrace();
+      System.out.println("update" + e.getMessage());
+    } finally {
+      return true;
+    }
+  }
+
+  @SuppressWarnings("finally")
+  private boolean connect() {
+    try {
+      Class.forName("com.mysql.jdbc.Driver");
+      conn = DriverManager.getConnection("jdbc:mysql://localhost/:3306" + strDBname + "?user=" + user
+              + "&password=" + passwd + "");
+      // stmt = conn.createStatement();
+    } catch (Exception e) {
+      System.out.println("OpenConnection:" + e.getMessage());
+      return false;
+    } finally {
+      return true;
+    }
+  }
+
 }
