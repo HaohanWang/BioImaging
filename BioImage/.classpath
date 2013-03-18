@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="/home/kane/workspace/BioImaging/jna-3.4.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/kane/workspace/BioImaging/platform-3.4.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/kane/workspace/BioImaging/vlcj-2.1.0.jar"/>
+	<classpathentry kind="lib" path="/home/kane/workspace/BioImaging/jna-3.4.0.jar"/>
+	<classpathentry kind="lib" path="/home/kane/workspace/BioImaging/platform-3.4.0.jar"/>
+	<classpathentry kind="lib" path="/home/kane/workspace/BioImaging/vlcj-2.1.0.jar"/>
 	<classpathentry kind="lib" path="/home/kane/workspace/BioImaging/weka.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
