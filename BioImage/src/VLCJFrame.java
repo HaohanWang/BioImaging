@@ -1,4 +1,5 @@
-package ui;
+
+
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -30,7 +31,6 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 
 import objectModel.SignalNode;
-import receptor.Receptor;
 
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
@@ -54,13 +54,13 @@ public class VLCJFrame extends JFrame implements ActionListener {
 	private JProgressBar progressBar;
 	private JFileChooser fileChooser;
 	private String[] mediaOptions;
-	private Object tgInstance;
-	private Method getNodeMethod;
-	private Receptor rec;
-	private List<SignalNode> nodeList;
 
 	public static void main(String[] args) {
-
+		ThinkGear tg = ThinkGear.getInstance();
+		for (int i = 0; i < 100; i++){
+			SignalNode node = tg.getSignalNode();
+			//System.out.println(node.getAttention() + "," + node.getMeditation());
+		}
 		NativeLibrary.addSearchPath("libvlc", "C:/Program Files/VideoLAN/VLC");
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -165,8 +165,7 @@ public class VLCJFrame extends JFrame implements ActionListener {
 	}
 
 	public VLCJFrame() {
-		nodeList = new ArrayList<SignalNode>();
-		rec = new Receptor(nodeList);
+
 		this.setSize(400, 580);
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
@@ -223,16 +222,14 @@ public class VLCJFrame extends JFrame implements ActionListener {
 						File videoFile = fileChooser.getSelectedFile();
 						String mediaPath = videoFile.getAbsolutePath();
 						mediaPlayer.playMedia(mediaPath, mediaOptions);
-						Timer progressBarUpdateTimer = new Timer(1000, this);
+						Timer progressBarUpdateTimer = new Timer(50, this);
 						progressBarUpdateTimer
 								.setActionCommand("updateProgressBar");
 						progressBarUpdateTimer.start();
 
-						Timer brainWaveTimer = new Timer(1000, this);
+						Timer brainWaveTimer = new Timer(50, this);
 						brainWaveTimer.setActionCommand("updateBrainWave");
 						brainWaveTimer.start();
-						rec.setMediaPlayer(mediaPlayer);
-						rec.start();
 					} else {
 
 					}
@@ -249,22 +246,13 @@ public class VLCJFrame extends JFrame implements ActionListener {
 			progressBar.setValue((int) (mediaPlayer.getPosition() * 100) + 1);
 		}
 		if (e.getActionCommand().equals("updateBrainWave")) {
-			SignalNode node = rec.getNode();
-			if (node != null) {
-				int concentration = (int) node.getConcentration();
-				int meditation = (int) node.getMeditation();
-				System.out.println(node.getConcentration() + ","
-						+ node.getMeditation());
-
-				int concentrationY = (int) ((1.0 - concentration / 100.0) * brainWavePanel
-						.getHeight());
-				int meditationY = (int) ((1.0 - meditation / 100.0) * brainWavePanel
-						.getHeight());
-				int x = (int) (mediaPlayer.getPosition() * brainWavePanel
-						.getWidth());
-				brainWavePanel.paintLines(x, concentrationY, meditationY);
-
-			}
+			/*ThinkGear tg = ThinkGear.getInstance();
+			
+			for (int i = 0; i < 100; i++){
+				SignalNode node = tg.getSignalNode();
+				System.out.println(node.getAttention() + "," + node.getMeditation());
+			}*/
+			System.out.println();
 			brainWavePanel.repaint();
 		}
 		if (e.getActionCommand().equals("forward")) {
@@ -273,9 +261,6 @@ public class VLCJFrame extends JFrame implements ActionListener {
 				if (currentPosition >= 1.0)
 					currentPosition = 0.99F;
 				mediaPlayer.setPosition(currentPosition);
-				int x = (int) (mediaPlayer.getPosition() * brainWavePanel
-						.getWidth());
-				brainWavePanel.setPreviousX(x);
 			}
 		}
 		if (e.getActionCommand().equals("backward")) {
@@ -284,11 +269,63 @@ public class VLCJFrame extends JFrame implements ActionListener {
 				if (currentPosition <= 0.0)
 					currentPosition = 0.01F;
 				mediaPlayer.setPosition(currentPosition);
-				int x = (int) (mediaPlayer.getPosition() * brainWavePanel
-						.getWidth());
-				brainWavePanel.setPreviousX(x);
 			}
 		}
 
+	}
+
+	class BrainPanel extends JPanel {
+		private HashMap<Integer, Shape> shapes = new HashMap<Integer, Shape>();
+		private Shape currentShape = null;
+
+		private int previousX = 0;
+		private int previousY = 0;
+
+		BrainPanel() {
+			setPreferredSize(new Dimension(350, 100));
+		}
+
+		public void paintLineToPoint(int x, int y) {
+			int currentX = x;
+			int currentY = y;
+			currentShape = new Line2D.Double(previousX * 1.0D,
+					previousY * 1.0D, currentX * 1.0D, currentY * 1.0D);
+			if (!shapes.containsKey(currentX)) {
+				shapes.put(currentX, currentShape);
+				previousX = currentX;
+				previousY = currentY;
+			}
+		}
+
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			int width = brainWavePanel.getWidth();
+			int height = brainWavePanel.getHeight();
+
+			Graphics2D g2d = (Graphics2D) g;
+			
+			float dash1[] = {5.0f};
+			g2d.setStroke(new BasicStroke(1.0f,
+                    BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_ROUND,
+                    10.0f, dash1, 0.0f));
+			g2d.setPaint(Color.GRAY);
+			for (int i = 0; i <= 4; i++) {
+				g2d.draw(new Line2D.Double(0.0D, 0.25D * i * height,
+						1.0D * (width - 1), 0.25D * i * height));
+			}
+			g2d.draw(new Line2D.Double(0.0D, 1.0D * (height - 1),
+					1.0D * (width - 1), 1.0D * (height - 1)));
+			for (int i = 0; i <= 10; i++) {
+				g2d.draw(new Line2D.Double(0.1D * i * width, 0.0D, 0.1D * i
+						* width, 1.0D * (height - 1)));
+			}
+			g2d.draw(new Line2D.Double(1.0D * (width - 1), 0.0D,
+					1.0D * (width - 1), 1.0D * (height - 1)));
+			g2d.setPaint(Color.BLACK);
+			for (Shape shape : shapes.values()) {
+				g2d.draw(shape);
+			}
+		}
 	}
 }

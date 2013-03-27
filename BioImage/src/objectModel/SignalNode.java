@@ -5,7 +5,7 @@ public class SignalNode {
 
   private int userId;
 
-  private double attention;
+  private double concentration;
 
   private double meditation;
 
@@ -45,12 +45,12 @@ public class SignalNode {
     this.userId = userId;
   }
 
-  public double getAttention() {
-    return attention;
+  public double getConcentration() {
+    return concentration;
   }
 
-  public void setAttention(double attention) {
-    this.attention = attention;
+  public void setConcentration(double concentration) {
+    this.concentration = concentration;
   }
 
   public double getMeditation() {
