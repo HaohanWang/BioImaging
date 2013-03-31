@@ -4,6 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import persistence.BaseDao;
+import persistence.DataBaseConnection;
+
 import objectModel.SignalNode;
 
 public class SignalNodeDao extends BaseDao<SignalNode> {
@@ -11,7 +14,7 @@ public class SignalNodeDao extends BaseDao<SignalNode> {
 
   public SignalNode getById(int id) {
     SignalNode s = new SignalNode();
-    String sql = "select * from signal where id=" + id;
+    String sql = "select * from mydb.singal where id=" + id;
     ResultSet rs = instance.query(sql);
     try {
       if (rs != null && rs.next()) {
@@ -38,7 +41,7 @@ public class SignalNodeDao extends BaseDao<SignalNode> {
   }
 
   public void save(SignalNode s) {
-    String sql = "insert signal values(timestamp, attention, meditation, raw, delta, theta,alpha1, alpha2, beta1, beta2, gamma1, gamma2,confusion) values ("
+    String sql = "insert mydb.singal (timestamp, attention, meditation, raw, delta, theta,alpha1, alpha2, beta1, beta2, gamma1, gamma2,confusion) values ("
             + s.getTimestamp()
             + ","
             + s.getAttention()
@@ -61,13 +64,13 @@ public class SignalNodeDao extends BaseDao<SignalNode> {
             + ","
             + s.getGamma1()
             + ","
-            + s.getGamma2() + s.getConfusion();
+            + s.getGamma2() + "," + s.getConfusion() + ")";
     instance.update(sql);
   }
 
   public ArrayList<SignalNode> getAll() {
     ArrayList<SignalNode> sl = new ArrayList<SignalNode>();
-    String sql = "select * from signal";
+    String sql = "select * from mydb.singal";
     ResultSet rs = instance.query(sql);
     try {
       while (rs != null && rs.next()) {
@@ -94,13 +97,14 @@ public class SignalNodeDao extends BaseDao<SignalNode> {
     }
     return sl;
   }
+
   @SuppressWarnings("finally")
-  public int getCount(){
-    String sql = "select count(*) from signal";
+  public int getCount() {
+    String sql = "select count(*) from mydb.singal";
     ResultSet rs = instance.query(sql);
     try {
       if (rs != null && rs.next()) {
-        return rs.getInt("count");
+        return rs.getInt("count(*)");
       }
     } catch (SQLException e) {
       e.printStackTrace();
@@ -108,9 +112,9 @@ public class SignalNodeDao extends BaseDao<SignalNode> {
       return 0;
     }
   }
-  
-  public void delete(SignalNode s){
-    String sql = "delete from signal where timestamp="+s.getTimestamp();
+
+  public void delete(SignalNode s) {
+    String sql = "delete from mydb.singal where timestamp=" + s.getTimestamp();
     instance.update(sql);
   }
 }

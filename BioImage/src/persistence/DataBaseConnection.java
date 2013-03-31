@@ -5,7 +5,7 @@ import java.sql.*;
 public class DataBaseConnection {
   private static DataBaseConnection instance;
 
-  private final String user = "root";
+  private final String user = "bioimagingteam";
 
   private final String passwd = "111111";
 
@@ -69,6 +69,10 @@ public class DataBaseConnection {
     } finally {
       return true;
     }
+  }
+  
+  public static void main(String args[]){
+    
   }
 
 }

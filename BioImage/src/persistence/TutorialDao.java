@@ -21,7 +21,7 @@ public class TutorialDao extends BaseDao<Tutorial> {
 
   public Tutorial getById(long id) {
     Tutorial t = new Tutorial();
-    String sql = "select * from tutorial where id=" + id;
+    String sql = "select * from mydb.tutorial where id="+id;
     ResultSet rs = instance.query(sql);
     try {
       if (rs != null && rs.next()) {
@@ -41,7 +41,7 @@ public class TutorialDao extends BaseDao<Tutorial> {
 
   public ArrayList<Tutorial> getAll() {
     ArrayList<Tutorial> tl = new ArrayList<Tutorial>();
-    String sql = "select * from tutorial";
+    String sql = "select * from mydb.tutorial";
     ResultSet rs = instance.query(sql);
     try {
       while (rs != null && rs.next()) {
@@ -62,24 +62,24 @@ public class TutorialDao extends BaseDao<Tutorial> {
   }
 
   public void save(Tutorial t) {
-    String sql = "insert tutorial(name, fileName,length,user) values(\'" + t.getName() + "\'.\'"
+    String sql = "insert mydb.tutorial(name, fileName,length,user) values(\'" + t.getName() + "\'.\'"
             + t.getFileName() + "\'." + t.getLength() + ",\'" + t.getUnploader().getEmail() + "\')";
     instance.update(sql);
   }
 
   public void delete(Tutorial t) {
-    String sql = "delete from tutorial where name=\'" + t.getName() + "\'and user=\'"
+    String sql = "delete from mydb.tutorial where name=\'" + t.getName() + "\'and user=\'"
             + t.getUnploader().getEmail() + "\'";
     instance.update(sql);
   }
   
   @SuppressWarnings("finally")
   public int getCount(){
-    String sql = "select count(*) from tutorial";
+    String sql = "select count(*) from mydb.tutorial";
     ResultSet rs = instance.query(sql);
     try {
       if (rs != null && rs.next()) {
-        return rs.getInt("count");
+        return rs.getInt("count(*)");
       }
     } catch (SQLException e) {
       e.printStackTrace();

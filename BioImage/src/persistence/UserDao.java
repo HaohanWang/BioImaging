@@ -11,7 +11,7 @@ public class UserDao extends BaseDao<User> {
 
   public User getById(String id) {
     User u = new User();
-    String sql = "select * from user where email=" + id;
+    String sql = "select * from mydb.user where email=\'" + id + "\'";
     ResultSet rs = instance.query(sql);
     try {
       if (rs != null && rs.next()) {
@@ -28,8 +28,8 @@ public class UserDao extends BaseDao<User> {
   }
 
   public void save(User u) {
-    String sql = "insert into user(name,address,email,password,authority) values (\'" + u.getName()
-            + "\',\'" + u.getAddress() + "\',\'" + u.getEmail() + "\',\'"
+    String sql = "insert into mydb.user(name,address,email,password,authority) values (\'"
+            + u.getName() + "\',\'" + u.getAddress() + "\',\'" + u.getEmail() + "\',\'"
             + u.getPassword().toString() + "\'," + u.getAuthority() + ")";
     instance.update(sql);
   }
@@ -40,7 +40,7 @@ public class UserDao extends BaseDao<User> {
    */
   public ArrayList<User> getAll() {
     ArrayList<User> ul = new ArrayList<User>();
-    String sql = "select * from user";
+    String sql = "select * from mydb.user";
     ResultSet rs = instance.query(sql);
     try {
       while (rs != null && rs.next()) {
@@ -61,21 +61,20 @@ public class UserDao extends BaseDao<User> {
 
   @SuppressWarnings("finally")
   public int getCount() {
-    String sql = "select count(*) from user";
+    String sql = "select count(*) from mydb.user";
     ResultSet rs = instance.query(sql);
     try {
       if (rs != null && rs.next()) {
-        return rs.getInt("count");
+        return rs.getInt("count(*)");
       }
     } catch (SQLException e) {
       e.printStackTrace();
-    } finally {
-      return 0;
     }
+    return 0;
   }
 
   public void delete(User u) {
-    String sql = "delete from user where email=\'" + u.getEmail()+"\'";
+    String sql = "delete from mydb.user where email=\'" + u.getEmail() + "\'";
     instance.query(sql);
   }
 }
