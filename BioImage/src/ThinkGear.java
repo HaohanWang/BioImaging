@@ -1,5 +1,4 @@
 
-
 /*
  * @(#)Thinkgear.java    4.1    Jun 26, 2009
  * 
@@ -107,45 +106,44 @@ public class ThinkGear {
 			if (errCode == 1) {
 				/* If attention value has been updated by TG_ReadPackets()... */
 				if (GetValueStatus(id, DATA_ATTENTION) != 0.0) {
-					Date newTime = new Date();
 					for (int i = 0; i < 13; i++) {
 						double value = GetValue(id, i);
 						switch (i) {
-							case 2:
-								node.setConcentration(value);
-								break;
-							case 3:
-								node.setMeditation(value);
-								break;
-							case 4:
-								node.setRaw(value);
-								break;
-							case 5:
-								node.setDelta(value);
-								break;
-							case 6:
-								node.setTheta(value);
-								break;
-							case 7:
-								node.setAlpha1(value);
-								break;
-							case 8:
-								node.setAlpha2(value);
-								break;
-							case 9:
-								node.setBeta1(value);
-								break;
-							case 10:
-								node.setBeta2(value);
-								break;
-							case 11:
-								node.setGamma1(value);
-								break;
-							case 12:
-								node.setGamma2(value);
-								break;
-							default: 
-								break;
+						case 2:
+							node.setConcentration(value);
+							break;
+						case 3:
+							node.setMeditation(value);
+							break;
+						case 4:
+							node.setRaw(value);
+							break;
+						case 5:
+							node.setDelta(value);
+							break;
+						case 6:
+							node.setTheta(value);
+							break;
+						case 7:
+							node.setAlpha1(value);
+							break;
+						case 8:
+							node.setAlpha2(value);
+							break;
+						case 9:
+							node.setBeta1(value);
+							break;
+						case 10:
+							node.setBeta2(value);
+							break;
+						case 11:
+							node.setGamma1(value);
+							break;
+						case 12:
+							node.setGamma2(value);
+							break;
+						default:
+							break;
 						}
 					}
 					break;
@@ -548,13 +546,12 @@ public class ThinkGear {
 	 */
 	public static native void FreeConnection(int connectionId);
 
-	public static void main(String args[]) {
-		System.loadLibrary("thinkgear");
-		ThinkGear tg = ThinkGear.getInstance();
-		
-		for (int i = 0; i < 100; i++){
-			SignalNode node = tg.getSignalNode();
-			System.out.println(node.getConcentration() + "," + node.getMeditation());
-		}
-	}
+	/*
+	 * public static void main(String args[]) { System.loadLibrary("thinkgear");
+	 * ThinkGear tg = ThinkGear.getInstance();
+	 * 
+	 * for (int i = 0; i < 100; i++){ SignalNode node = tg.getSignalNode();
+	 * System.out.println(node.getConcentration() + "," + node.getMeditation());
+	 * } }
+	 */
 }

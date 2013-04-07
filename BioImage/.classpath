@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="C:/Users/Bioimaging/workspace/BioImaging/BioImage/platform-3.4.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Bioimaging/workspace/BioImaging/BioImage/vlcj-2.1.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Bioimaging/workspace/BioImaging/BioImage/weka.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Bioimaging/workspace/BioImaging/BioImage/LibSVM-1.0.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

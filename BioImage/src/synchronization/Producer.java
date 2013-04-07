@@ -1,5 +1,7 @@
 package synchronization;
 
+import objectModel.SignalNode;
+
 public interface Producer {
-  public void produce();
+  public void produce(SignalNode node);
 }

@@ -17,9 +17,9 @@ public class BrainPanel extends JPanel {
 	private HashMap<Integer, Shape> cfs_shapes = new HashMap<Integer, Shape>();
 	private Shape currentShape = null;
 
-	private int previousCon = 0;
-	private int previousMed = 0;
-	private int previousCfs = 0;
+	private int previousCon = 50;
+	private int previousMed = 50;
+	private int previousCfs = 50;
 	private int previousX = 0;
 
 	BrainPanel() {
@@ -51,8 +51,23 @@ public class BrainPanel extends JPanel {
 	public void paintConfusion(int x, int y) {
 		int currentX = x;
 		int currentY = y;
-		currentShape = new Line2D.Double(previousX * 1.0D, previousCfs * 1.0D,
-				currentX * 1.0D, currentY * 1.0D);
+		currentY = (int)(0.9*previousCfs + 0.1*currentY);
+		if (currentY < 40){
+			if (previousCfs < 40)
+				currentShape = new Line2D.Double(previousX * 1.0D, 2 * 1.0D,
+						currentX * 1.0D, 2 * 1.0D);
+			else
+				currentShape = new Line2D.Double(previousX * 1.0D, (this.getHeight()-2) * 1.0D,
+						currentX * 1.0D, 2 * 1.0D);
+		}
+		else{
+			if (previousCfs < 40)
+				currentShape = new Line2D.Double(previousX * 1.0D, 2 * 1.0D,
+						currentX * 1.0D, (this.getHeight()-2) * 1.0D);
+			else
+				currentShape = new Line2D.Double(previousX * 1.0D, (this.getHeight()-2) * 1.0D,
+						currentX * 1.0D, (this.getHeight()-2) * 1.0D);
+		}
 		if (!cfs_shapes.containsKey(currentX)) {
 			cfs_shapes.put(currentX, currentShape);
 			previousCfs = currentY;
@@ -92,7 +107,7 @@ public class BrainPanel extends JPanel {
 				1.0D * (width - 1), 1.0D * (height - 1)));
 		
 		g2d.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND,
-				BasicStroke.JOIN_ROUND, 10.0f, dash1, 0.0f));
+				BasicStroke.JOIN_ROUND, 10.0f, null, 0.0f));
 		
 		g2d.setPaint(Color.BLUE);
 		for (Shape shape : con_shapes.values()) {

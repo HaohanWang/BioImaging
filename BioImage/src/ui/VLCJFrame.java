@@ -1,50 +1,45 @@
 package ui;
 
-import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Shape;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Line2D;
 import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicProgressBarUI;
 
 import objectModel.SignalNode;
 import receptor.Receptor;
+import synchronization.SynchronizedBuffer;
 
-import uk.co.caprica.vlcj.binding.LibVlc;
-import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.embedded.DefaultFullScreenStrategy;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.FullScreenStrategy;
 import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
-import uk.co.caprica.vlcj.runtime.RuntimeUtil;
+
+import analyzer.Analyzer;
+import analyzer.SVMStrategy;
+import analyzer.Strategy;
 
 import com.sun.jna.NativeLibrary;
-import com.sun.jna.Native;
 
 public class VLCJFrame extends JFrame implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private boolean testMode;
+	
+	private Strategy analyzerStrategy;
+	private Analyzer analyzer;
+	
 	private EmbeddedMediaPlayer mediaPlayer;
 	private JPanel buttonPanel;
 	private JPanel progressPanel;
@@ -54,10 +49,8 @@ public class VLCJFrame extends JFrame implements ActionListener {
 	private JProgressBar progressBar;
 	private JFileChooser fileChooser;
 	private String[] mediaOptions;
-	private Object tgInstance;
-	private Method getNodeMethod;
 	private Receptor rec;
-	private List<SignalNode> nodeList;
+	private SynchronizedBuffer buffer;
 
 	public static void main(String[] args) {
 
@@ -65,9 +58,14 @@ public class VLCJFrame extends JFrame implements ActionListener {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new VLCJFrame();
+				new VLCJFrame(true);
 			}
 		});
+	}
+	
+	public void setTestMode(boolean testMode){
+		this.testMode = testMode;
+		rec.setTestMode(testMode);
 	}
 
 	private void initializeVideoCanvas() {
@@ -164,11 +162,13 @@ public class VLCJFrame extends JFrame implements ActionListener {
 
 	}
 
-	public VLCJFrame() {
-		nodeList = new ArrayList<SignalNode>();
-		rec = new Receptor(nodeList);
+	public VLCJFrame(boolean testMode) {
+		this.testMode = testMode;
+		buffer = new SynchronizedBuffer();
+		rec = new Receptor(buffer, testMode);
+		analyzerStrategy = new SVMStrategy();
+		analyzer = new Analyzer(analyzerStrategy, buffer);
 		this.setSize(400, 580);
-		this.setVisible(true);
 		this.setLayout(new BorderLayout());
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -210,6 +210,7 @@ public class VLCJFrame extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		// Stop or resume the video
 		if (e.getActionCommand().equals("stopOrResume")) {
 			JCheckBox cb = (JCheckBox) e.getSource();
 			if (cb.isSelected()) {
@@ -233,6 +234,7 @@ public class VLCJFrame extends JFrame implements ActionListener {
 						brainWaveTimer.start();
 						rec.setMediaPlayer(mediaPlayer);
 						rec.start();
+						analyzer.start();
 					} else {
 
 					}
@@ -245,11 +247,19 @@ public class VLCJFrame extends JFrame implements ActionListener {
 			}
 
 		}
+		// Update the progress bar of the video
 		if (e.getActionCommand().equals("updateProgressBar")) {
 			progressBar.setValue((int) (mediaPlayer.getPosition() * 100) + 1);
 		}
+		// Update the brainwave panel
 		if (e.getActionCommand().equals("updateBrainWave")) {
-			SignalNode node = rec.getNode();
+			SignalNode node = null;
+			try {
+				node = buffer.take();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			if (node != null) {
 				int concentration = (int) node.getConcentration();
 				int meditation = (int) node.getMeditation();
@@ -267,6 +277,7 @@ public class VLCJFrame extends JFrame implements ActionListener {
 			}
 			brainWavePanel.repaint();
 		}
+		// Button that Move Forward the video
 		if (e.getActionCommand().equals("forward")) {
 			if (mediaPlayer.getPosition() != -1.0) {
 				float currentPosition = mediaPlayer.getPosition() + 0.05F;
@@ -278,6 +289,7 @@ public class VLCJFrame extends JFrame implements ActionListener {
 				brainWavePanel.setPreviousX(x);
 			}
 		}
+		// Button that Move Backward the video
 		if (e.getActionCommand().equals("backward")) {
 			if (mediaPlayer.getPosition() != -1.0) {
 				float currentPosition = mediaPlayer.getPosition() - 0.05F;

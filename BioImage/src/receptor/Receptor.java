@@ -1,92 +1,102 @@
 package receptor;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.StringTokenizer;
 
 import objectModel.SignalNode;
-import ui.BrainPanel;
+import synchronization.Producer;
+import synchronization.SynchronizedBuffer;
+import thinkGearCommunications.ThinkGearAdapter;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
-public class Receptor extends Thread {
-	private Object tgInstance;
-	private Method getNodeMethod;
-	private List<SignalNode> nodeList;
-	private int currentNode;
+public class Receptor extends Thread implements Producer {
+	private ThinkGearAdapter tgAdapter;
+	private SynchronizedBuffer buffer;
 	private EmbeddedMediaPlayer mediaPlayer;
+	private boolean testMode;
 
-	public Receptor(List<SignalNode> nodeList) {
-		this.nodeList = nodeList;
-		try {
-			Class test = Class.forName("ThinkGear");
-			Class[] nullClass = new Class[] {};
-			Object[] nullObject = new Object[] {};
-			Constructor constructor = test.getConstructor(nullClass);
-			tgInstance = constructor.newInstance(nullObject);
-			getNodeMethod = test.getMethod("getSignalNode", nullClass);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public Receptor(SynchronizedBuffer buffer, boolean testMode) {
+		tgAdapter = ThinkGearAdapter.getInstance();
+		this.testMode = testMode;
+		this.buffer = buffer;
 	}
-	
-	public void setMediaPlayer(EmbeddedMediaPlayer mediaPlayer){
+
+	public void setMediaPlayer(EmbeddedMediaPlayer mediaPlayer) {
 		this.mediaPlayer = mediaPlayer;
 	}
-	
-	public SignalNode getNode() {
-		if (currentNode < nodeList.size()) {
-			return nodeList.get(currentNode++);
-		}
-		return null;
+
+	public void setTestMode(boolean testMode) {
+		this.testMode = testMode;
 	}
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		while (true) {
-			SignalNode node;
-			try {
-				node = (SignalNode) getNodeMethod.invoke(tgInstance);
+		if (!testMode) {
+			while (true) {
+				SignalNode node;
+				node = tgAdapter.getSignalNode();
 				node.setTimestamp(mediaPlayer.getTime());
-				nodeList.add(node);
-			} catch (IllegalArgumentException e) {
+				this.produce(node);
+			}
+		} else {
+			File demoFile = new File("labeledData.txt");
+			try {
+				BufferedReader reader = new BufferedReader(new FileReader(
+						demoFile));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					StringTokenizer st = new StringTokenizer(line, ",");
+					SignalNode node = new SignalNode();
+					node.setTimestamp(Long.parseLong(st.nextToken()));
+					st.nextToken();
+					st.nextToken();
+					node.setConcentration(Double.parseDouble(st.nextToken()));
+					node.setMeditation(Double.parseDouble(st.nextToken()));
+					node.setRaw(Double.parseDouble(st.nextToken()));
+					node.setDelta(Double.parseDouble(st.nextToken()));
+					node.setTheta(Double.parseDouble(st.nextToken()));
+					node.setAlpha1(Double.parseDouble(st.nextToken()));
+					node.setAlpha2(Double.parseDouble(st.nextToken()));
+					node.setBeta1(Double.parseDouble(st.nextToken()));
+					node.setBeta2(Double.parseDouble(st.nextToken()));
+					node.setGamma1(Double.parseDouble(st.nextToken()));
+					node.setGamma2(Double.parseDouble(st.nextToken()));
+					node.setConfusion(Integer.parseInt(st.nextToken()));
+					System.out.println("Added" + node.getTimestamp());
+					buffer.put(node);
+				}
+			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (IllegalAccessException e) {
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (InvocationTargetException e) {
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}
 	}
 
 	public static void main(String[] args) {
-		List<SignalNode> nodeList = new ArrayList<SignalNode>();
-		Receptor r = new Receptor(nodeList);
+		SynchronizedBuffer buffer = new SynchronizedBuffer();
+		Receptor r = new Receptor(buffer, true);
 		r.start();
+	}
+
+	@Override
+	public void produce(SignalNode node) {
+		// TODO Auto-generated method stub
+		try {
+			buffer.put(node);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
