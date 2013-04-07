@@ -3,15 +3,15 @@ package persistence;
 import java.util.ArrayList;
 
 public interface BaseDaoInterface<B> {
-  public B getNewInstance();
+	public B getNewInstance();
 
-  public B getById(long id);
+	public B getById(long id);
 
-  public ArrayList<B> getAll();
+	public ArrayList<B> getAll();
 
-  public int getCount();
+	public int getCount();
 
-  public void save(B instance);
+	public void save(B instance);
 
-  public void delete(B insatnce);
+	public void delete(B insatnce);
 }
