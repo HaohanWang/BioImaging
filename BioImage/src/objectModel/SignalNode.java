@@ -27,7 +27,7 @@ public class SignalNode {
 
 	private double gamma2;
 
-	private int confusion;
+	private int confusion = 1;
 
 	public long getTimestamp() {
 		return timestamp;

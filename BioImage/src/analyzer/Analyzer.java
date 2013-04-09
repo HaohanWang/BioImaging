@@ -42,12 +42,15 @@ public class Analyzer extends Thread implements Consumer {
 			featureVector[10] = (int) node.getGamma2();
 			featureVector[11] = (int) node.getConfusion();
 
-			this.executeAnalyze(featureVector);
+			node.setConfusion(this.executeAnalyze(featureVector));
+			System.out.println(node.getConfusion());
 		}
 	}
 
 	@Override
 	public void run() {
-		consume();
+		while (true) {
+			consume();
+		}
 	}
 }

@@ -28,12 +28,23 @@ public class SVMStrategy implements Strategy {
 	}
 
 	public SVMStrategy() {
-		svm = new SMO();
+		SMO s = new SMO();
+		s = (SMO) this.loadModel("model/svm.model");
+		this.setSVM(s);
+		String[] ops2 = { "-t", "trainingdata/weather.nominal.arff", "-L",
+				"0.0010", "-N", "1", "-V",
+				"10", // k-fold cross-validation
+				"-K", "weka.classifiers.functions.supportVector.PolyKernel",
+				"-W", "1" };
+		this.setoption(ops2);
+
 	}
 
 	public SVMStrategy(String[] ops) {
 		svm = new SMO();
-		setoption(ops);
+
+		SVMStrategy svm = new SVMStrategy();
+		this.setoption(ops);
 	}
 
 	public void evaluationClassifier(String[] option) {
@@ -159,7 +170,7 @@ public class SVMStrategy implements Strategy {
 	 *            -the model filename
 	 * @return-the trained classifier
 	 */
-	public Object loadModel(String file) {
+	public static Object loadModel(String file) {
 		try {
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(
 					file));
@@ -204,8 +215,40 @@ public class SVMStrategy implements Strategy {
 
 	@Override
 	public int analyze(int[] featureVector) {
-		// TODO Auto-generated method stub
-		return 0;
+		double predicted = 0;
+		try {
+			inst = new Instances(new FileReader(this.TrainingDateFile));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		int cIdx = inst.numAttributes() - 1;
+		inst.setClassIndex(cIdx);
+		// add a new sentence
+
+		int attributeNum = inst.numAttributes();
+		// attributeNum++;
+		// System.out.println("inst="+inst);
+		if (featureVector.length > attributeNum) {
+			return -1;
+		}
+		Instance instance = new DenseInstance(attributeNum);
+		// instance.setClassIndex(10);
+
+		for (int i = 0; i < featureVector.length; i++) {
+			instance.setValue(inst.attribute(i), featureVector[i]);
+		}
+
+		instance.setDataset(inst);
+		try {
+			predicted = svm.classifyInstance(instance);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return (int) predicted;
 	}
 
 }
