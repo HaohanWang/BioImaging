@@ -4,31 +4,25 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Frame;
 import java.awt.Image;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.net.URL;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicProgressBarUI;
 
-import uk.co.caprica.vlcj.binding.LibVlc;
-import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.embedded.DefaultFullScreenStrategy;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.FullScreenStrategy;
 import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
-import uk.co.caprica.vlcj.runtime.RuntimeUtil;
-
-import com.sun.jna.NativeLibrary;
-import com.sun.jna.Native;
 
 public class TestVlcj extends JFrame implements ActionListener {
-    private EmbeddedMediaPlayer mediaPlayer;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private EmbeddedMediaPlayer mediaPlayer;
     private JPanel buttonPanel;
     private JPanel progressPanel;
     private JPanel buttonAndProgressPanel;

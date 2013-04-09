@@ -8,8 +8,6 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.*;
 
@@ -40,8 +38,6 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 	
 	private static final long DELAY = 500;
 
-	private boolean testMode;
-
 	private Strategy analyzerStrategy;
 	private Analyzer analyzer;
 
@@ -71,7 +67,6 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 	}
 
 	public void setTestMode(boolean testMode) {
-		this.testMode = testMode;
 		rec.setTestMode(testMode);
 	}
 
@@ -170,7 +165,6 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 	}
 
 	public VLCJFrame(boolean testMode) {
-		this.testMode = testMode;
 		rawDataBuffer = new SynchronizedBuffer();
 		analyzedDataBuffer = new SynchronizedBuffer();
 		reportDataBuffer = new SynchronizedBuffer();

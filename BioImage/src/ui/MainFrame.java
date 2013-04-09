@@ -17,6 +17,10 @@ import javax.swing.SwingUtilities;
 import com.sun.jna.NativeLibrary;
 
 public class MainFrame extends JFrame implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel loginInfoPanel;
 	private JTextField userNameField;
 	private JPasswordField passwordField;

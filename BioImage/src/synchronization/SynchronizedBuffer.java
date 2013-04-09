@@ -5,6 +5,10 @@ import java.util.concurrent.LinkedBlockingDeque;
 import objectModel.SignalNode;
 
 public class SynchronizedBuffer extends LinkedBlockingDeque<SignalNode> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static final int INITIAL_CAPACITY = 100;
 
 	public SynchronizedBuffer() {
