@@ -14,7 +14,7 @@ public class SignalNodeDao extends BaseDao<SignalNode> {
 
   public SignalNode getById(int id) {
     SignalNode s = new SignalNode();
-    String sql = "select * from mydb.singal where id=" + id;
+    String sql = "select * from mydb.singal where id=" + id+"";
     ResultSet rs = instance.query(sql);
     try {
       if (rs != null && rs.next()) {
@@ -64,7 +64,9 @@ public class SignalNodeDao extends BaseDao<SignalNode> {
             + ","
             + s.getGamma1()
             + ","
-            + s.getGamma2() + "," + s.getConfusion() + ")";
+            + s.getGamma2() 
+            + ","
+            + s.getConfusion()+")";
     instance.update(sql);
   }
 
@@ -97,9 +99,8 @@ public class SignalNodeDao extends BaseDao<SignalNode> {
     }
     return sl;
   }
-
   @SuppressWarnings("finally")
-  public int getCount() {
+  public int getCount(){
     String sql = "select count(*) from mydb.singal";
     ResultSet rs = instance.query(sql);
     try {
@@ -112,9 +113,9 @@ public class SignalNodeDao extends BaseDao<SignalNode> {
       return 0;
     }
   }
-
-  public void delete(SignalNode s) {
-    String sql = "delete from mydb.singal where timestamp=" + s.getTimestamp();
+  
+  public void delete(SignalNode s){
+    String sql = "delete from mydb.singal where timestamp="+s.getTimestamp();
     instance.update(sql);
   }
 }

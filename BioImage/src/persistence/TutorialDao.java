@@ -4,6 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import persistence.BaseDao;
+import persistence.DataBaseConnection;
+import persistence.UserDao;
+
 import objectModel.Tutorial;
 import objectModel.User;
 
@@ -21,7 +25,7 @@ public class TutorialDao extends BaseDao<Tutorial> {
 
   public Tutorial getById(long id) {
     Tutorial t = new Tutorial();
-    String sql = "select * from mydb.tutorial where id="+id;
+    String sql = "select * from mydb.tutorial where id=" + id;
     ResultSet rs = instance.query(sql);
     try {
       if (rs != null && rs.next()) {
@@ -62,8 +66,9 @@ public class TutorialDao extends BaseDao<Tutorial> {
   }
 
   public void save(Tutorial t) {
-    String sql = "insert mydb.tutorial(name, fileName,length,user) values(\'" + t.getName() + "\',\'"
-            + t.getFileName() + "\'," + t.getLength() + ",\'" + t.getUnploader().getEmail() + "\')";
+    String sql = "insert mydb.tutorial(name, fileName,length,user) values(\'" + t.getName()
+            + "\',\'" + t.getFileName() + "\'," + t.getLength() + ",\'"
+            + t.getUnploader().getEmail() + "\')";
     instance.update(sql);
   }
 
@@ -72,9 +77,9 @@ public class TutorialDao extends BaseDao<Tutorial> {
             + t.getUnploader().getEmail() + "\'";
     instance.update(sql);
   }
-  
+
   @SuppressWarnings("finally")
-  public int getCount(){
+  public int getCount() {
     String sql = "select count(*) from mydb.tutorial";
     ResultSet rs = instance.query(sql);
     try {
