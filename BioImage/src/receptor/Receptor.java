@@ -41,7 +41,7 @@ public class Receptor extends Thread implements Producer {
 				SignalNode node;
 				node = tgAdapter.getSignalNode();
 				node.setTimestamp(mediaPlayer.getTime());
-				this.produce(node);
+				this.produce(node, buffer);
 			}
 		} else {
 			File demoFile = new File("labeledData.txt");
@@ -67,16 +67,12 @@ public class Receptor extends Thread implements Producer {
 					node.setGamma1(Double.parseDouble(st.nextToken()));
 					node.setGamma2(Double.parseDouble(st.nextToken()));
 					node.setConfusion(Integer.parseInt(st.nextToken()));
-					System.out.println("Added" + node.getTimestamp());
-					buffer.put(node);
+					this.produce(node, buffer);
 				}
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -90,10 +86,10 @@ public class Receptor extends Thread implements Producer {
 	}
 
 	@Override
-	public void produce(SignalNode node) {
+	public void produce(SignalNode node, SynchronizedBuffer buffer) {
 		// TODO Auto-generated method stub
 		try {
-			buffer.put(node);
+			buffer.putFirst(node);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

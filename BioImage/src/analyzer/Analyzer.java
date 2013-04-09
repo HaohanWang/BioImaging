@@ -2,15 +2,19 @@ package analyzer;
 
 import objectModel.SignalNode;
 import synchronization.Consumer;
+import synchronization.Producer;
 import synchronization.SynchronizedBuffer;
 
-public class Analyzer extends Thread implements Consumer {
+public class Analyzer extends Thread implements Consumer, Producer {
 	private Strategy strategy;
-	private SynchronizedBuffer buffer;
+	private SynchronizedBuffer inputBuffer;
+	private SynchronizedBuffer outputBuffer;
 
-	public Analyzer(Strategy strategy, SynchronizedBuffer buffer) {
+	public Analyzer(Strategy strategy, SynchronizedBuffer inputBuffer,
+			SynchronizedBuffer outputBuffer) {
 		this.strategy = strategy;
-		this.buffer = buffer;
+		this.inputBuffer = inputBuffer;
+		this.outputBuffer = outputBuffer;
 	}
 
 	public int executeAnalyze(int[] featureVector) {
@@ -18,11 +22,11 @@ public class Analyzer extends Thread implements Consumer {
 	}
 
 	@Override
-	public void consume() {
+	public void consume(SynchronizedBuffer buffer) {
 		// TODO Auto-generated method stub
 		SignalNode node = null;
 		try {
-			node = buffer.take();
+			node = buffer.takeFirst();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -43,14 +47,23 @@ public class Analyzer extends Thread implements Consumer {
 			featureVector[11] = (int) node.getConfusion();
 
 			node.setConfusion(this.executeAnalyze(featureVector));
-			System.out.println(node.getConfusion());
+			produce(node, outputBuffer);
+		}
+	}
+
+	public void produce(SignalNode node, SynchronizedBuffer buffer) {
+		try {
+			buffer.putFirst(node);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void run() {
 		while (true) {
-			consume();
+			consume(inputBuffer);
 		}
 	}
 }

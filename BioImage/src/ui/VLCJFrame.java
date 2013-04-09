@@ -15,6 +15,8 @@ import javax.swing.*;
 
 import objectModel.SignalNode;
 import receptor.Receptor;
+import synchronization.Consumer;
+import synchronization.Producer;
 import synchronization.SynchronizedBuffer;
 
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -29,17 +31,20 @@ import analyzer.Strategy;
 
 import com.sun.jna.NativeLibrary;
 
-public class VLCJFrame extends JFrame implements ActionListener {
+public class VLCJFrame extends JFrame implements ActionListener, Consumer,
+		Producer {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private static final long DELAY = 500;
 
 	private boolean testMode;
-	
+
 	private Strategy analyzerStrategy;
 	private Analyzer analyzer;
-	
+
 	private EmbeddedMediaPlayer mediaPlayer;
 	private JPanel buttonPanel;
 	private JPanel progressPanel;
@@ -50,7 +55,9 @@ public class VLCJFrame extends JFrame implements ActionListener {
 	private JFileChooser fileChooser;
 	private String[] mediaOptions;
 	private Receptor rec;
-	private SynchronizedBuffer buffer;
+	private SynchronizedBuffer rawDataBuffer;
+	private SynchronizedBuffer analyzedDataBuffer;
+	private SynchronizedBuffer reportDataBuffer;
 
 	public static void main(String[] args) {
 
@@ -62,8 +69,8 @@ public class VLCJFrame extends JFrame implements ActionListener {
 			}
 		});
 	}
-	
-	public void setTestMode(boolean testMode){
+
+	public void setTestMode(boolean testMode) {
 		this.testMode = testMode;
 		rec.setTestMode(testMode);
 	}
@@ -164,10 +171,13 @@ public class VLCJFrame extends JFrame implements ActionListener {
 
 	public VLCJFrame(boolean testMode) {
 		this.testMode = testMode;
-		buffer = new SynchronizedBuffer();
-		rec = new Receptor(buffer, testMode);
+		rawDataBuffer = new SynchronizedBuffer();
+		analyzedDataBuffer = new SynchronizedBuffer();
+		reportDataBuffer = new SynchronizedBuffer();
+		rec = new Receptor(rawDataBuffer, testMode);
 		analyzerStrategy = new SVMStrategy();
-		analyzer = new Analyzer(analyzerStrategy, buffer);
+		analyzer = new Analyzer(analyzerStrategy, rawDataBuffer,
+				analyzedDataBuffer);
 		this.setSize(400, 580);
 		this.setLayout(new BorderLayout());
 		this.setLocationRelativeTo(null);
@@ -253,29 +263,7 @@ public class VLCJFrame extends JFrame implements ActionListener {
 		}
 		// Update the brainwave panel
 		if (e.getActionCommand().equals("updateBrainWave")) {
-			SignalNode node = null;
-			try {
-				node = buffer.take();
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			if (node != null) {
-				int concentration = (int) node.getConcentration();
-				int meditation = (int) node.getMeditation();
-				System.out.println(node.getConcentration() + ","
-						+ node.getMeditation());
-
-				int concentrationY = (int) ((1.0 - concentration / 100.0) * brainWavePanel
-						.getHeight());
-				int meditationY = (int) ((1.0 - meditation / 100.0) * brainWavePanel
-						.getHeight());
-				int x = (int) (mediaPlayer.getPosition() * brainWavePanel
-						.getWidth());
-				brainWavePanel.paintLines(x, concentrationY, meditationY);
-
-			}
-			brainWavePanel.repaint();
+			consume(analyzedDataBuffer);
 		}
 		// Button that Move Forward the video
 		if (e.getActionCommand().equals("forward")) {
@@ -302,5 +290,49 @@ public class VLCJFrame extends JFrame implements ActionListener {
 			}
 		}
 
+	}
+
+	@Override
+	public void consume(SynchronizedBuffer buffer) {
+		// TODO Auto-generated method stub
+		SignalNode node = null;
+		long timestamp = mediaPlayer.getTime() - DELAY;
+		try {
+			node = buffer.takeFirst();
+			while(node.getTimestamp() < timestamp){
+				node = buffer.takeFirst();
+			}
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if (node != null) {
+			int concentration = (int) node.getConcentration();
+			int meditation = (int) node.getMeditation();
+			int confusion = node.getConfusion();
+			System.out.println(node.getConcentration() + ","
+					+ node.getMeditation());
+
+			int concentrationY = (int) ((1.0 - concentration / 100.0) * brainWavePanel
+					.getHeight());
+			int meditationY = (int) ((1.0 - meditation / 100.0) * brainWavePanel
+					.getHeight());
+			int x = (int) (mediaPlayer.getPosition() * brainWavePanel
+					.getWidth());
+			brainWavePanel.paintLines(x, concentrationY, meditationY, confusion);
+			produce(node, reportDataBuffer);
+		}
+		brainWavePanel.repaint();
+	}
+
+	@Override
+	public void produce(SignalNode node, SynchronizedBuffer buffer) {
+		// TODO Auto-generated method stub
+		try {
+			buffer.putLast(node);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

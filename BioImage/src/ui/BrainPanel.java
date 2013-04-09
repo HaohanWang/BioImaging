@@ -16,10 +16,12 @@ public class BrainPanel extends JPanel {
 	private HashMap<Integer, Shape> med_shapes = new HashMap<Integer, Shape>();
 	private HashMap<Integer, Shape> cfs_shapes = new HashMap<Integer, Shape>();
 	private Shape currentShape = null;
+	
+	private int consistencyCount;
 
 	private int previousCon = 50;
 	private int previousMed = 50;
-	private int previousCfs = 50;
+	private int previousCfs = 98;
 	private int previousX = 0;
 
 	BrainPanel() {
@@ -50,34 +52,32 @@ public class BrainPanel extends JPanel {
 
 	public void paintConfusion(int x, int y) {
 		int currentX = x;
-		int currentY = y;
-		currentY = (int)(0.9*previousCfs + 0.1*currentY);
-		if (currentY < 40){
-			if (previousCfs < 40)
-				currentShape = new Line2D.Double(previousX * 1.0D, 2 * 1.0D,
-						currentX * 1.0D, 2 * 1.0D);
-			else
-				currentShape = new Line2D.Double(previousX * 1.0D, (this.getHeight()-2) * 1.0D,
-						currentX * 1.0D, 2 * 1.0D);
+		int currentY = 0;
+		if (y == 0)
+			currentY = this.getHeight() - 2;
+		else
+			currentY = 2;
+		if (currentY == previousCfs)
+			consistencyCount ++;
+		else if (consistencyCount < 5){
+			currentY = previousCfs;
+			consistencyCount ++;
 		}
-		else{
-			if (previousCfs < 40)
-				currentShape = new Line2D.Double(previousX * 1.0D, 2 * 1.0D,
-						currentX * 1.0D, (this.getHeight()-2) * 1.0D);
-			else
-				currentShape = new Line2D.Double(previousX * 1.0D, (this.getHeight()-2) * 1.0D,
-						currentX * 1.0D, (this.getHeight()-2) * 1.0D);
-		}
+		else
+			consistencyCount = 0;
+		currentShape = new Line2D.Double(previousX * 1.0D, previousCfs * 1.0D,
+				currentX * 1.0D, currentY * 1.0D);
 		if (!cfs_shapes.containsKey(currentX)) {
 			cfs_shapes.put(currentX, currentShape);
 			previousCfs = currentY;
 		}
 	}
 
-	public void paintLines(int x, int concentration, int meditation) {
+	public void paintLines(int x, int concentration, int meditation,
+			int confusion) {
 		paintConcentration(x, concentration);
 		paintMeditation(x, meditation);
-		paintConfusion(x, (concentration + meditation) / 2);
+		paintConfusion(x, confusion);
 		previousX = x;
 		repaint();
 	}
@@ -105,10 +105,10 @@ public class BrainPanel extends JPanel {
 		}
 		g2d.draw(new Line2D.Double(1.0D * (width - 1), 0.0D,
 				1.0D * (width - 1), 1.0D * (height - 1)));
-		
+
 		g2d.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND,
 				BasicStroke.JOIN_ROUND, 10.0f, null, 0.0f));
-		
+
 		g2d.setPaint(Color.BLUE);
 		for (Shape shape : con_shapes.values()) {
 			g2d.draw(shape);
@@ -117,7 +117,7 @@ public class BrainPanel extends JPanel {
 		for (Shape shape : med_shapes.values()) {
 			g2d.draw(shape);
 		}
-		
+
 		g2d.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND,
 				BasicStroke.JOIN_ROUND, 10.0f, null, 0.0f));
 
@@ -125,10 +125,10 @@ public class BrainPanel extends JPanel {
 		for (Shape shape : cfs_shapes.values()) {
 			g2d.draw(shape);
 		}
-		
+
 	}
-	
-	public void setPreviousX(int x){
+
+	public void setPreviousX(int x) {
 		this.previousX = x;
 	}
 }

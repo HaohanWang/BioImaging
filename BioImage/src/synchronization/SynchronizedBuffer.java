@@ -1,10 +1,10 @@
 package synchronization;
 
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import objectModel.SignalNode;
 
-public class SynchronizedBuffer extends ArrayBlockingQueue<SignalNode> {
+public class SynchronizedBuffer extends LinkedBlockingDeque<SignalNode> {
 	private static final int INITIAL_CAPACITY = 100;
 
 	public SynchronizedBuffer() {
@@ -13,9 +13,9 @@ public class SynchronizedBuffer extends ArrayBlockingQueue<SignalNode> {
 
 	// Return the first node whose time stamp is larger than the given time
 	public SignalNode getNode(long timestamp) throws InterruptedException {
-		SignalNode node = this.take();
+		SignalNode node = this.takeFirst();
 		while(node.getTimestamp() < timestamp){
-			node = this.take();
+			node = this.takeFirst();
 		}
 		return node;
 	}
