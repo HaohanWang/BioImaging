@@ -2,11 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="C:/Users/Bioimaging/workspace/BioImaging/BioImage/jna-3.4.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Bioimaging/workspace/BioImaging/BioImage/platform-3.4.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Bioimaging/workspace/BioImaging/BioImage/vlcj-2.1.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Bioimaging/workspace/BioImaging/BioImage/weka.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Bioimaging/workspace/BioImaging/BioImage/LibSVM-1.0.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Bioimaging/workspace/BioImaging/BioImage/mysql-connector-java-5.1.24-bin.jar"/>
+	<classpathentry kind="lib" path="jna-3.4.0.jar"/>
+	<classpathentry kind="lib" path="platform-3.4.0.jar"/>
+	<classpathentry kind="lib" path="vlcj-2.1.0.jar"/>
+	<classpathentry kind="lib" path="weka.jar"/>
+	<classpathentry kind="lib" path="LibSVM-1.0.4.jar"/>
+	<classpathentry kind="lib" path="mysql-connector-java-5.1.24-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

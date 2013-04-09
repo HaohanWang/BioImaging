@@ -18,6 +18,8 @@ public class BrainPanel extends JPanel {
 	private Shape currentShape = null;
 	
 	private int consistencyCount;
+	
+	private static final int CONSISTENCY_THRESHOLD = 10;
 
 	private int previousCon = 50;
 	private int previousMed = 50;
@@ -59,7 +61,7 @@ public class BrainPanel extends JPanel {
 			currentY = 2;
 		if (currentY == previousCfs)
 			consistencyCount ++;
-		else if (consistencyCount < 5){
+		else if (consistencyCount < CONSISTENCY_THRESHOLD){
 			currentY = previousCfs;
 			consistencyCount ++;
 		}
