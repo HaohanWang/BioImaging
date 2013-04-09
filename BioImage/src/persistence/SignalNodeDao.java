@@ -14,7 +14,7 @@ public class SignalNodeDao extends BaseDao<SignalNode> {
 
 	public SignalNode getById(int id) {
 		SignalNode s = new SignalNode();
-		String sql = "select * from mydb.singal where id=" + id;
+		String sql = "select * from mydb.singal where id=" + id + "";
 		ResultSet rs = instance.query(sql);
 		try {
 			if (rs != null && rs.next()) {

@@ -2,6 +2,8 @@ package persistence;
 
 import java.sql.*;
 
+import objectModel.*;
+
 public class DataBaseConnection {
 	private static DataBaseConnection instance;
 
@@ -23,6 +25,7 @@ public class DataBaseConnection {
 
 	private DataBaseConnection() {
 		boolean suc = connect();
+		System.out.println(suc);
 	}
 
 	public static DataBaseConnection getInstance() {
@@ -43,7 +46,6 @@ public class DataBaseConnection {
 		return rs;
 	}
 
-	@SuppressWarnings("finally")
 	public boolean update(String q) {
 		try {
 			stmt = conn.createStatement();
@@ -51,28 +53,47 @@ public class DataBaseConnection {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("update" + e.getMessage());
-		} finally {
-			return true;
 		}
+		return true;
 	}
 
-	@SuppressWarnings("finally")
+	// @SuppressWarnings("finally")
 	private boolean connect() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/:3306"
-					+ strDBname + "?user=" + user + "&password=" + passwd + "");
+			conn = DriverManager
+					.getConnection("jdbc:mysql://instance41489.db.xeround.com:4654/"
+							+ strDBname
+							+ "?user="
+							+ user
+							+ "&password="
+							+ passwd + "");
 			// stmt = conn.createStatement();
 		} catch (Exception e) {
 			System.out.println("OpenConnection:" + e.getMessage());
 			return false;
-		} finally {
-			return true;
 		}
+		System.out.println("hmmm");
+		return true;
 	}
 
-	public static void main(String args[]) {
-
+	public static void main(String args[]) throws SQLException {
+		DataBaseConnection instance = DataBaseConnection.getInstance();
+		// String sql = "select * from user";
+		// ResultSet rs = instance.query(sql);
+		// System.out.println(rs);
+		UserDao ud = new UserDao();
+		TutorialDao td = new TutorialDao();
+		SignalNodeDao snd = new SignalNodeDao();
+		ReportDao rd = new ReportDao();
+		SignalNode s = new SignalNode();
+		Tutorial t = new Tutorial();
+		t.setFileName("abc");
+		t.setLength(100);
+		t.setName("what");
+		User u = new User();
+		u.setEmail("admin@bic.com");
+		t.setUnploader(u);
+		td.save(t);
 	}
-
 }

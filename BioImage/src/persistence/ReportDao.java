@@ -20,7 +20,7 @@ public class ReportDao extends BaseDao<Report> {
 
 	public Report getById(int id) {
 		Report r = new Report();
-		String sql = "select * from mydb.report where id=" + id + "";
+		String sql = "select * from report where id=" + id;
 		ResultSet rs = instance.query(sql);
 		try {
 			if (rs != null && rs.next()) {
@@ -40,7 +40,7 @@ public class ReportDao extends BaseDao<Report> {
 
 	public ArrayList<Report> getAll() {
 		ArrayList<Report> rl = new ArrayList<Report>();
-		String sql = "select * from mydb.report";
+		String sql = "select * from report";
 		ResultSet rs = instance.query(sql);
 		try {
 			while (rs != null && rs.next()) {
@@ -64,7 +64,7 @@ public class ReportDao extends BaseDao<Report> {
 	 * @deprecated how to get the id of tutorial
 	 */
 	public void save(Report r) {
-		String sql = "insert mydb.report(user, tutorial, fileName, alogirthm) values (\'"
+		String sql = "insert report(user, tutorial, fileName, alogirthm) values (\'"
 				+ r.getLearner().getEmail()
 				+ "\',\'"
 				+ r.getTutorial().getName()
@@ -75,19 +75,17 @@ public class ReportDao extends BaseDao<Report> {
 	}
 
 	public void delete(Report r) {
-		String sql = "delete from mydb.report where fileName=\'"
-				+ r.getFilename() + "\' and user=\'"
-				+ r.getLearner().getEmail() + "\' and tutorial=\'"
-				+ r.getTutorial().getFileName() + "\'";
-		instance.update(sql);
+		String sql = "delete from report where fileName=\'" + r.getFilename()
+				+ "\' and user=\'" + r.getLearner().getEmail()
+				+ "\' and tutorial=" + r.getTutorial().getFileName() + "\'";
 	}
 
 	public int getCount() {
-		String sql = "select count(*) from mydb.report";
+		String sql = "select count(*) from report";
 		ResultSet rs = instance.query(sql);
 		try {
 			if (rs != null && rs.next()) {
-				return rs.getInt("count(*)");
+				return rs.getInt("count");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -15,6 +15,7 @@ public class UserDao extends BaseDao<User> {
 		ResultSet rs = instance.query(sql);
 		try {
 			if (rs != null && rs.next()) {
+				System.out.println("I am here");
 				u.setName(rs.getString("name"));
 				u.setAddress(rs.getString("address"));
 				u.setAuthority(rs.getInt("authority"));
@@ -28,7 +29,7 @@ public class UserDao extends BaseDao<User> {
 	}
 
 	public void save(User u) {
-		String sql = "insert into mydb.user(name,address,email,password,authority) values (\'"
+		String sql = "insert into user(name,address,email,password,authority) values (\'"
 				+ u.getName()
 				+ "\',\'"
 				+ u.getAddress()
@@ -36,8 +37,8 @@ public class UserDao extends BaseDao<User> {
 				+ u.getEmail()
 				+ "\',\'"
 				+ u.getPassword().toString()
-				+ "\',"
-				+ u.getAuthority() + ")";
+				+ "\',\'"
+				+ u.getAuthority() + "\')";
 		instance.update(sql);
 	}
 
@@ -47,7 +48,7 @@ public class UserDao extends BaseDao<User> {
 	 */
 	public ArrayList<User> getAll() {
 		ArrayList<User> ul = new ArrayList<User>();
-		String sql = "select * from mydb.user";
+		String sql = "select * from user";
 		ResultSet rs = instance.query(sql);
 		try {
 			while (rs != null && rs.next()) {
@@ -70,6 +71,7 @@ public class UserDao extends BaseDao<User> {
 	public int getCount() {
 		String sql = "select count(*) from mydb.user";
 		ResultSet rs = instance.query(sql);
+		System.out.println(rs);
 		try {
 			if (rs != null && rs.next()) {
 				return rs.getInt("count(*)");
@@ -81,8 +83,7 @@ public class UserDao extends BaseDao<User> {
 	}
 
 	public void delete(User u) {
-		String sql = "delete from mydb.user where email=\'" + u.getEmail()
-				+ "\'";
+		String sql = "delete from user where email=\'" + u.getEmail() + "\'";
 		instance.query(sql);
 	}
 }

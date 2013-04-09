@@ -4,6 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import persistence.BaseDao;
+import persistence.DataBaseConnection;
+import persistence.UserDao;
+
 import objectModel.Tutorial;
 import objectModel.User;
 
@@ -64,9 +68,9 @@ public class TutorialDao extends BaseDao<Tutorial> {
 	public void save(Tutorial t) {
 		String sql = "insert mydb.tutorial(name, fileName,length,user) values(\'"
 				+ t.getName()
-				+ "\'.\'"
+				+ "\',\'"
 				+ t.getFileName()
-				+ "\'."
+				+ "\',"
 				+ t.getLength() + ",\'" + t.getUnploader().getEmail() + "\')";
 		instance.update(sql);
 	}
