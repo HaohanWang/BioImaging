@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
@@ -34,9 +35,9 @@ public class MainFrame extends JFrame implements ActionListener {
 		userNameField = new JTextField();
 		passwordField = new JPasswordField();
 
-		loginInfoPanel.add(new JTextArea("Username: "));
+		loginInfoPanel.add(new JLabel("Username: "));
 		loginInfoPanel.add(userNameField);
-		loginInfoPanel.add(new JTextArea("Password: "));
+		loginInfoPanel.add(new JLabel("Password: "));
 		loginInfoPanel.add(passwordField);
 
 		this.add(loginInfoPanel, BorderLayout.CENTER);
@@ -48,6 +49,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
 		JButton loginButton = new JButton("Login");
 		JButton testButton = new JButton("Test");
+		JButton trainButton = new JButton("Train");
 
 		loginButton.addActionListener(this);
 		loginButton.setActionCommand("login");
@@ -55,8 +57,12 @@ public class MainFrame extends JFrame implements ActionListener {
 		testButton.addActionListener(this);
 		testButton.setActionCommand("test");
 
+		trainButton.addActionListener(this);
+		trainButton.setActionCommand("train");
+
 		buttonPanel.add(loginButton);
 		buttonPanel.add(testButton);
+		buttonPanel.add(trainButton);
 
 		this.add(buttonPanel, BorderLayout.SOUTH);
 	}
@@ -73,7 +79,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		addLoginPanel();
 		addButtonPanel();
 
-		vlcjFrame = new VLCJFrame(false);
+		vlcjFrame = new VLCJFrame(false, "");
 
 		this.setVisible(true);
 	}
@@ -82,13 +88,21 @@ public class MainFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getActionCommand().equals("login")) {
+			vlcjFrame.setUserName(userNameField.getText());
 			this.setVisible(false);
 			vlcjFrame.setVisible(true);
 		}
 		if (e.getActionCommand().equals("test")) {
+			vlcjFrame.setUserName(userNameField.getText());
 			this.setVisible(false);
 			vlcjFrame.setTestMode(true);
 			vlcjFrame.setVisible(true);
+		}
+		if (e.getActionCommand().equals("train")) {
+			vlcjFrame.setUserName(userNameField.getText());
+			this.setVisible(false);
+			vlcjFrame.setVisible(true);
+			vlcjFrame.train();
 		}
 
 	}

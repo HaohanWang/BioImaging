@@ -66,12 +66,16 @@ public class TutorialDao extends BaseDao<Tutorial> {
 	}
 
 	public void save(Tutorial t) {
-		String sql = "insert mydb.tutorial(name, fileName,length,user) values(\'"
+		System.out.println(t.getId());
+		String sql = "insert mydb.tutorial(id, name, fileName,length,user) values(\'"
+				+ t.getId()
+				+ "\',\'"
 				+ t.getName()
 				+ "\',\'"
 				+ t.getFileName()
 				+ "\',"
 				+ t.getLength() + ",\'" + t.getUnploader().getEmail() + "\')";
+		System.out.println(sql);
 		instance.update(sql);
 	}
 

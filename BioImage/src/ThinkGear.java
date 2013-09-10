@@ -90,13 +90,6 @@ public class ThinkGear {
 		Connect(0, "\\\\" + ".\\COM40", BAUD_9600, 0);
 	} /* Prevent instantiation of a ThinkGear instance */
 
-	public static ThinkGear getInstance() {
-		if (instance == null) {
-			instance = new ThinkGear();
-		}
-		return instance;
-	}
-
 	public SignalNode getSignalNode() {
 		SignalNode node = new SignalNode();
 		while (true) {

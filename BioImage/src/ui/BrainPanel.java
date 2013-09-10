@@ -33,6 +33,17 @@ public class BrainPanel extends JPanel {
 	BrainPanel() {
 		setPreferredSize(new Dimension(350, 100));
 	}
+	
+	public void restart(){
+		previousCon = 50;
+		previousMed = 50;
+		previousCfs = 98;
+		previousX = 0;
+		consistencyCount = 0;
+		con_shapes.clear();
+		med_shapes.clear();
+		cfs_shapes.clear();
+	}
 
 	public void paintConcentration(int x, int y) {
 		int currentX = x;

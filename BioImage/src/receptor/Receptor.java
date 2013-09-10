@@ -18,6 +18,7 @@ public class Receptor extends Thread implements Producer {
 	private SynchronizedBuffer buffer;
 	private EmbeddedMediaPlayer mediaPlayer;
 	private boolean testMode;
+	private boolean recordStarted;
 
 	public Receptor(SynchronizedBuffer buffer, boolean testMode) {
 		tgAdapter = ThinkGearAdapter.getInstance();
@@ -32,6 +33,10 @@ public class Receptor extends Thread implements Producer {
 	public void setTestMode(boolean testMode) {
 		this.testMode = testMode;
 	}
+	
+	public void startRecord(){
+		this.recordStarted = true;
+	}
 
 	@Override
 	public void run() {
@@ -41,7 +46,8 @@ public class Receptor extends Thread implements Producer {
 				SignalNode node;
 				node = tgAdapter.getSignalNode();
 				node.setTimestamp(mediaPlayer.getTime());
-				this.produce(node, buffer);
+				if (recordStarted)
+					this.produce(node, buffer);
 			}
 		} else {
 			File demoFile = new File("labeledData.txt");

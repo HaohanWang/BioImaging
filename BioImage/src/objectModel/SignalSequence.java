@@ -3,7 +3,7 @@ package objectModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Signal {
+public class SignalSequence {
 	private int nodeCount;
 	private ArrayList<SignalNode> signalData;
 

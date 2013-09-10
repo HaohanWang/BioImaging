@@ -1,0 +1,10 @@
+confused5:2
+confused4:5
+easy1:4
+confused3:2
+confused2:7
+confused1:2
+easy4:1
+easy5:1
+easy2:2
+easy3:2

@@ -70,4 +70,8 @@ public class ThinkGearAdapter {
 		}
 		return node;
 	}
+	
+	public void closeConnection(){
+		
+	}
 }

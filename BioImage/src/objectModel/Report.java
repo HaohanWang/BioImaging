@@ -4,6 +4,7 @@ public class Report {
 	private Tutorial tutorial = null;
 	private User learner = null;
 	private String Algorithm = null, filename = null;
+	private SignalSequence signal;
 
 	public Tutorial getTutorial() {
 		return tutorial;
@@ -36,6 +37,14 @@ public class Report {
 
 	public void setFilename(String filename) {
 		this.filename = filename;
+	}
+	
+	public SignalSequence getSignal(){
+		return signal;
+	}
+	
+	public void setSignal(SignalSequence signal){
+		
 	}
 
 }

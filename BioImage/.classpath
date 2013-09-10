@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="weka.jar"/>
 	<classpathentry kind="lib" path="LibSVM-1.0.4.jar"/>
 	<classpathentry kind="lib" path="mysql-connector-java-5.1.24-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Bioimaging/workspace/BioImaging/BioImage/itextpdf-5.4.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

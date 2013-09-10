@@ -6,6 +6,9 @@ public class AuditableEntity extends BaseEntity implements Auditable {
 	private String createdId = null, updateID = null;
 	private Date createDate = null, updateDate = null;
 
+	public AuditableEntity(){
+		super();
+	}
 	@Override
 	public String getCreatID() {
 		// TODO Auto-generated method stub
