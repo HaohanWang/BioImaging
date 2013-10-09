@@ -21,8 +21,6 @@ import javax.swing.*;
 
 import objectModel.SignalNode;
 import receptor.Receptor;
-import synchronization.Consumer;
-import synchronization.Producer;
 import synchronization.SynchronizedBuffer;
 
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -37,13 +35,7 @@ import analyzer.Strategy;
 
 import com.sun.jna.NativeLibrary;
 
-public class VLCJFrame extends JFrame implements ActionListener, Consumer,
-		Producer {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
+public class VLCJFrame extends JFrame implements ActionListener {
 	private static final long DELAY = 500;
 
 	private static final long CONFUSING_VIDEO_NUMBER = 9;
@@ -99,10 +91,6 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 				new VLCJFrame(true, "");
 			}
 		});
-	}
-
-	public void setTestMode(boolean testMode) {
-		rec.setTestMode(testMode);
 	}
 
 	private void initializeVideoCanvas() {
@@ -169,19 +157,16 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 
 	private void initializeButtonPanel() {
 		resumeStopButton = new JCheckBox();
-		// URL url = getClass().getResource("a.png");
-		// if (url == null)
-		// System.out.println("Error");
 		resumeStopButton.setSize(30, 30);
 
 		ImageIcon stopIcon = new ImageIcon(
-				"icons/Actions-media-playback-pause-icon.png");
+				"resources/icons/Actions-media-playback-pause-icon.png");
 		Image stopImage = stopIcon.getImage();
 		stopIcon.setImage(stopImage.getScaledInstance(50, 50,
 				Image.SCALE_SMOOTH));
 
 		ImageIcon resumeIcon = new ImageIcon(
-				"icons/Actions-media-playback-start-icon.png");
+				"resources/icons/Actions-media-playback-start-icon.png");
 		Image resumeImage = resumeIcon.getImage();
 		resumeIcon.setImage(resumeImage.getScaledInstance(50, 50,
 				Image.SCALE_SMOOTH));
@@ -196,14 +181,14 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 		JCheckBox backwardButton = new JCheckBox();
 
 		ImageIcon forwardIcon = new ImageIcon(
-				"icons/Actions-media-seek-forward-icon.png");
+				"resources/icons/Actions-media-seek-forward-icon.png");
 		Image forwardImage = forwardIcon.getImage();
 		forwardIcon.setImage(forwardImage.getScaledInstance(50, 50,
 				Image.SCALE_SMOOTH));
 		forwardButton.setIcon(forwardIcon);
 
 		ImageIcon backwardIcon = new ImageIcon(
-				"icons/Actions-media-seek-backward-icon.png");
+				"resources/icons/Actions-media-seek-backward-icon.png");
 		Image backwardImage = backwardIcon.getImage();
 		backwardIcon.setImage(backwardImage.getScaledInstance(50, 50,
 				Image.SCALE_SMOOTH));
@@ -324,7 +309,7 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 		rawDataBuffer = new SynchronizedBuffer();
 		analyzedDataBuffer = new SynchronizedBuffer();
 		reportDataBuffer = new SynchronizedBuffer();
-		rec = new Receptor(rawDataBuffer, testMode);
+		rec = new Receptor(rawDataBuffer, false);
 		watchedTrainVideos = new ArrayList<String>();
 		analyzerStrategy = new SVMStrategy();
 		analyzer = new Analyzer(analyzerStrategy, rawDataBuffer,
@@ -334,7 +319,7 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-		File test = new File("test.mp4");
+		File test = new File("resources/anchor.mp4");
 		fileChooser = new JFileChooser(test.getAbsolutePath());
 
 		mediaOptions = new String[] { "video-filter=logo",
@@ -374,9 +359,8 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 	private File getNextVideo() {
 		String fileName = "";
 		do {
-			fileName = "trainingVideo/";
+			fileName = "resources/trainingVideo/";
 			double confuse = Math.random();
-
 			if (confuse > 0.5D && watchedConfusedVideoCount < 5) {
 				fileName = fileName + "confused";
 				this.confused = 1;
@@ -399,15 +383,14 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 			watchedUnconfusedVideoCount++;
 		File videoFile = new File(fileName);
 		previousVideo = fileName.substring(14, fileName.length() - 4);
-		this.trainingData = new File("trainingData/" + userName + "_"
-				+ fileName.substring(14, fileName.length() - 4) + "_"
+		this.trainingData = new File("output/trainingData/" + userName + "_"
+				+ fileName.substring(24, fileName.length() - 4) + "_"
 				+ (watchedConfusedVideoCount + watchedUnconfusedVideoCount)
 				+ ".txt");
 		try {
 			trainingDataWriter = new BufferedWriter(
 					new FileWriter(trainingData));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println(trainingData.getAbsolutePath() + "start training");
@@ -422,7 +405,6 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		// Stop or resume the video
 		if (e.getActionCommand().equals("rate")) {
 			JRadioButton tempButton = (JRadioButton) e.getSource();
@@ -476,7 +458,6 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 						}
 						rateWriter.close();
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -493,34 +474,13 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 
 						if (returnVal == JFileChooser.APPROVE_OPTION) {
 							File videoFile = fileChooser.getSelectedFile();
-							String mediaPath = videoFile.getAbsolutePath();
-							mediaPlayer.playMedia(mediaPath, mediaOptions);
-							progressBarUpdateTimer = new Timer(1000, this);
-							progressBarUpdateTimer
-									.setActionCommand("updateProgressBar");
-							progressBarUpdateTimer.start();
-
-							brainWaveTimer = new Timer(1000, this);
-							brainWaveTimer.setActionCommand("updateBrainWave");
-							brainWaveTimer.start();
-							rec.startRecord();
-							analyzer.start();
+							initialize(videoFile);
 						} else {
 
 						}
 					} else {
 						File videoFile = getNextVideo();
-						String mediaPath = videoFile.getAbsolutePath();
-						mediaPlayer.playMedia(mediaPath, mediaOptions);
-						progressBarUpdateTimer = new Timer(1000, this);
-						progressBarUpdateTimer
-								.setActionCommand("updateProgressBar");
-						progressBarUpdateTimer.start();
-						brainWaveTimer = new Timer(1000, this);
-						brainWaveTimer.setActionCommand("updateBrainWave");
-						brainWaveTimer.start();
-						rec.startRecord();
-						analyzer.start();
+						initialize(videoFile);
 					}
 				}
 			} else {
@@ -528,12 +488,12 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 					mediaPlayer.pause();
 				}
 			}
-
 		}
 		// Update the progress bar of the video
 		if (e.getActionCommand().equals("updateProgressBar")) {
 			progressBar.setValue((int) (mediaPlayer.getPosition() * 100) + 1);
-			System.out.println(((int) (mediaPlayer.getPosition() * 100)));
+			System.out.println("Video played : " + mediaPlayer.getPosition()
+					* 100 + "%");
 			if (train && ((int) (mediaPlayer.getPosition() * 100)) >= 99) {
 				try {
 					trainingDataWriter.close();
@@ -577,9 +537,20 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 
 	}
 
-	@Override
+	private void initialize(File videoFile) {
+		String mediaPath = videoFile.getAbsolutePath();
+		mediaPlayer.playMedia(mediaPath, mediaOptions);
+		progressBarUpdateTimer = new Timer(1000, this);
+		progressBarUpdateTimer.setActionCommand("updateProgressBar");
+		progressBarUpdateTimer.start();
+		brainWaveTimer = new Timer(1000, this);
+		brainWaveTimer.setActionCommand("updateBrainWave");
+		brainWaveTimer.start();
+		rec.startRecord();
+		analyzer.start();
+	}
+
 	public void consume(SynchronizedBuffer buffer) {
-		// TODO Auto-generated method stub
 		SignalNode node = null;
 		long timestamp = mediaPlayer.getTime() - DELAY;
 		try {
@@ -588,32 +559,33 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 				node = buffer.takeFirst();
 			}
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		if (node != null) {
 			int concentration = (int) node.getConcentration();
 			int meditation = (int) node.getMeditation();
 			int confusion = node.getConfusion();
-			System.out.println(node.getTimestamp() + ",0.0,0.0,"
-					+ node.getConcentration() + "," + node.getMeditation()
-					+ "," + node.getRaw() + "," + node.getDelta() + ","
-					+ node.getTheta() + "," + node.getAlpha1() + ","
-					+ node.getAlpha2() + "," + node.getBeta1() + ","
-					+ node.getBeta2() + "," + node.getGamma1() + ","
-					+ node.getGamma2() + "," + confused);
-			try {
-				trainingDataWriter.write(node.getTimestamp() + ",0.0,0.0,"
-						+ node.getConcentration() + "," + node.getMeditation()
-						+ "," + node.getRaw() + "," + node.getDelta() + ","
-						+ node.getTheta() + "," + node.getAlpha1() + ","
-						+ node.getAlpha2() + "," + node.getBeta1() + ","
-						+ node.getBeta2() + "," + node.getGamma1() + ","
-						+ node.getGamma2() + "," + confused);
-				trainingDataWriter.newLine();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			System.out.println(node.getTimestamp() + node.getConcentration()
+					+ "," + node.getMeditation() + "," + node.getRaw() + ","
+					+ node.getDelta() + "," + node.getTheta() + ","
+					+ node.getAlpha1() + "," + node.getAlpha2() + ","
+					+ node.getBeta1() + "," + node.getBeta2() + ","
+					+ node.getGamma1() + "," + node.getGamma2() + ","
+					+ confused);
+			if (train) {
+				try {
+					trainingDataWriter.write(node.getTimestamp()
+							+ node.getConcentration() + ","
+							+ node.getMeditation() + "," + node.getRaw() + ","
+							+ node.getDelta() + "," + node.getTheta() + ","
+							+ node.getAlpha1() + "," + node.getAlpha2() + ","
+							+ node.getBeta1() + "," + node.getBeta2() + ","
+							+ node.getGamma1() + "," + node.getGamma2() + ","
+							+ confused);
+					trainingDataWriter.newLine();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			int concentrationY = (int) ((1.0 - concentration / 100.0) * brainWavePanel
 					.getHeight());
@@ -623,19 +595,12 @@ public class VLCJFrame extends JFrame implements ActionListener, Consumer,
 					.getWidth());
 			brainWavePanel
 					.paintLines(x, concentrationY, meditationY, confusion);
-			produce(node, reportDataBuffer);
+			try {
+				reportDataBuffer.putLast(node);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		brainWavePanel.repaint();
-	}
-
-	@Override
-	public void produce(SignalNode node, SynchronizedBuffer buffer) {
-		// TODO Auto-generated method stub
-		try {
-			buffer.putLast(node);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }

@@ -1,15 +1,6 @@
 package objectModel;
 
-import java.awt.Cursor;
-import java.awt.Desktop;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.*;
 import java.util.ArrayList;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 public class Tutorial extends AuditableEntity{
 
@@ -62,10 +53,5 @@ public class Tutorial extends AuditableEntity{
 	public ArrayList<String> getTag() {
 		return tag;
 	}
-
-	public void addTage(String tag) {
-
-	}
-
 
 }

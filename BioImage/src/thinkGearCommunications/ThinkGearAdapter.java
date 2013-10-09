@@ -24,25 +24,18 @@ public class ThinkGearAdapter {
 			tgInstance = constructor.newInstance(nullObject);
 			getNodeMethod = thinkGear.getMethod("getSignalNode", nullClass);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -59,13 +52,10 @@ public class ThinkGearAdapter {
 		try {
 			node = (SignalNode) getNodeMethod.invoke(tgInstance);
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return node;
@@ -73,5 +63,12 @@ public class ThinkGearAdapter {
 	
 	public void closeConnection(){
 		
+	}
+	
+	public static void main(String[] args) {
+		ThinkGearAdapter tg = ThinkGearAdapter.getInstance();
+		while (true) {
+			System.out.println(tg.getSignalNode().getConcentration());
+		}
 	}
 }

@@ -12,10 +12,6 @@ import java.util.HashMap;
 import javax.swing.JPanel;
 
 public class BrainPanel extends JPanel {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private HashMap<Integer, Shape> con_shapes = new HashMap<Integer, Shape>();
 	private HashMap<Integer, Shape> med_shapes = new HashMap<Integer, Shape>();
 	private HashMap<Integer, Shape> cfs_shapes = new HashMap<Integer, Shape>();

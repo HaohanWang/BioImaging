@@ -11,17 +11,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import com.sun.jna.NativeLibrary;
 
 public class MainFrame extends JFrame implements ActionListener {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private JPanel loginInfoPanel;
 	private JTextField userNameField;
 	private JPasswordField passwordField;
@@ -48,20 +43,15 @@ public class MainFrame extends JFrame implements ActionListener {
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
 		JButton loginButton = new JButton("Login");
-		JButton testButton = new JButton("Test");
 		JButton trainButton = new JButton("Train");
 
 		loginButton.addActionListener(this);
 		loginButton.setActionCommand("login");
 
-		testButton.addActionListener(this);
-		testButton.setActionCommand("test");
-
 		trainButton.addActionListener(this);
 		trainButton.setActionCommand("train");
 
 		buttonPanel.add(loginButton);
-		buttonPanel.add(testButton);
 		buttonPanel.add(trainButton);
 
 		this.add(buttonPanel, BorderLayout.SOUTH);
@@ -86,16 +76,9 @@ public class MainFrame extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if (e.getActionCommand().equals("login")) {
 			vlcjFrame.setUserName(userNameField.getText());
 			this.setVisible(false);
-			vlcjFrame.setVisible(true);
-		}
-		if (e.getActionCommand().equals("test")) {
-			vlcjFrame.setUserName(userNameField.getText());
-			this.setVisible(false);
-			vlcjFrame.setTestMode(true);
 			vlcjFrame.setVisible(true);
 		}
 		if (e.getActionCommand().equals("train")) {

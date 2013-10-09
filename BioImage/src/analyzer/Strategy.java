@@ -1,5 +1,5 @@
 package analyzer;
 
 public interface Strategy {
-	int analyze(int[] featureVector);
+	int analyze(double[] featureVector);
 }

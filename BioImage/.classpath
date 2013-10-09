@@ -2,12 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="jna-3.4.0.jar"/>
-	<classpathentry kind="lib" path="platform-3.4.0.jar"/>
-	<classpathentry kind="lib" path="vlcj-2.1.0.jar"/>
-	<classpathentry kind="lib" path="weka.jar"/>
-	<classpathentry kind="lib" path="LibSVM-1.0.4.jar"/>
-	<classpathentry kind="lib" path="mysql-connector-java-5.1.24-bin.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Bioimaging/workspace/BioImaging/BioImage/itextpdf-5.4.1.jar"/>
+	<classpathentry kind="lib" path="lib/jna-3.4.0.jar"/>
+	<classpathentry kind="lib" path="lib/platform-3.4.0.jar"/>
+	<classpathentry kind="lib" path="lib/vlcj-2.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/weka.jar"/>
+	<classpathentry kind="lib" path="lib/LibSVM-1.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.24-bin.jar"/>
+	<classpathentry kind="lib" path="lib/itextpdf-5.4.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

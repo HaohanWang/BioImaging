@@ -50,7 +50,7 @@ public class Receptor extends Thread implements Producer {
 					this.produce(node, buffer);
 			}
 		} else {
-			File demoFile = new File("labeledData.txt");
+			File demoFile = new File("resources/testData.txt");
 			try {
 				BufferedReader reader = new BufferedReader(new FileReader(
 						demoFile));
@@ -75,11 +75,10 @@ public class Receptor extends Thread implements Producer {
 					node.setConfusion(Integer.parseInt(st.nextToken()));
 					this.produce(node, buffer);
 				}
+				reader.close();
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -93,11 +92,9 @@ public class Receptor extends Thread implements Producer {
 
 	@Override
 	public void produce(SignalNode node, SynchronizedBuffer buffer) {
-		// TODO Auto-generated method stub
 		try {
 			buffer.putFirst(node);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

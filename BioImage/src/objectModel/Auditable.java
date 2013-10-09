@@ -6,11 +6,11 @@ public interface Auditable {
 
 	public String getCreatID();
 
-	public void setCreatID(String creatID);
+	public void setCreateID(String creatID);
 
-	public Date getCreatDate();
+	public Date getCreateDate();
 
-	public void setCreatDate(Date creatDate);
+	public void setCreateDate(Date creatDate);
 
 	public String getUpdateId();
 
