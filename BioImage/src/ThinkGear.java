@@ -1,14 +1,9 @@
-
 /*
  * @(#)Thinkgear.java    4.1    Jun 26, 2009
  * 
  * Copyright (c) 2008-2009 NeuroSky, Inc. All Rights Reserved
  * NEUROSKY PRORIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
-
-import java.io.*;
-import java.util.Date;
-
 import objectModel.SignalNode;
 
 /**
@@ -80,14 +75,14 @@ public class ThinkGear {
 	private static ThinkGear instance;
 	/* Load DLL library */
 	static {
-		System.loadLibrary("thinkgear");
+		System.loadLibrary("lib/thinkgear");
 		System.out.println("Successfully load library");
 	}
 
 	public ThinkGear() {
 		super();
 		id = GetNewConnectionId();
-		Connect(0, "\\\\" + ".\\COM40", BAUD_9600, 0);
+		Connect(0, "\\\\" + ".\\COM41", BAUD_9600, 0);
 	} /* Prevent instantiation of a ThinkGear instance */
 
 	public SignalNode getSignalNode() {
@@ -539,12 +534,14 @@ public class ThinkGear {
 	 */
 	public static native void FreeConnection(int connectionId);
 
-	/*
-	 * public static void main(String args[]) { System.loadLibrary("thinkgear");
-	 * ThinkGear tg = ThinkGear.getInstance();
-	 * 
-	 * for (int i = 0; i < 100; i++){ SignalNode node = tg.getSignalNode();
-	 * System.out.println(node.getConcentration() + "," + node.getMeditation());
-	 * } }
-	 */
+	public static void main(String args[]) {
+		System.loadLibrary("thinkgear");
+		ThinkGear tg = new ThinkGear();
+
+		for (int i = 0; i < 100; i++) {
+			SignalNode node = tg.getSignalNode();
+			System.out.println(node.getConcentration() + ","
+					+ node.getMeditation());
+		}
+	}
 }
